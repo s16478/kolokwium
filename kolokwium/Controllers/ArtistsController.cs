@@ -27,17 +27,20 @@ namespace kolokwium.Controllers
             {
                 var artistById = _context.Artists
                                                 .Where(artist => artist.IdArtist.Equals(id))
-                                                .Select(artist => new {
-                                                                        artist.IdArtist,
-                                                                        artist.Nickname,
-                                                                        events = artist.ArtistEvent
-                                                .OrderByDescending(artistEvent => artistEvent.Event.StartDate.Year)
-                                                .Select(artistEvent => new {
-                                                                        artistEvent.Event.IdEvent,
-                                                                        artistEvent.Event.Name,
-                                                                        artistEvent.Event.StartDate,
-                                                                        artistEvent.Event.EndDate })
-                }).FirstOrDefault();
+                                                .Select(artist => new
+                                                {
+                                                    artist.IdArtist,
+                                                    artist.Nickname,
+                                                    events = artist.ArtistEvent
+                                                .OrderByDescending(artistEvent => artistEvent.Event.StartDate)
+                                                .Select(artistEvent => new
+                                                {
+                                                    artistEvent.Event.IdEvent,
+                                                    artistEvent.Event.Name,
+                                                    artistEvent.Event.StartDate,
+                                                    artistEvent.Event.EndDate
+                                                })
+                                                }).ToList();
 
                 return Ok(artistById);
             }
@@ -46,9 +49,12 @@ namespace kolokwium.Controllers
                 return NotFound("Artist with given Id was not found");
             }
 
-
-
         }
+
+
+       // [HttpPost("{id}")]
+
+
 
     }
 }
